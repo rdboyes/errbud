@@ -1,19 +1,28 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 # errbud
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
-The goal of errbud is to make it easy for you to get help fixing R
-errors from LLMs.
+The goal of errbud is to make it easy for you to get help fixing R errors from LLMs. 
 
 ## Installation
 
-You can install the development version of errbud from
-[GitHub](https://github.com/) with:
+You can install the development version of errbud from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
@@ -24,7 +33,7 @@ pak::pak("rdboyes/errbud")
 
 This is a basic example which shows you how to solve a common problem:
 
-``` r
+``` r 
 sum[1]
 ```
 
@@ -32,7 +41,7 @@ sum[1]
 ! Object of type 'builtin' is not subsettable
 ```
 
-``` r
+``` r 
 errbud::ai()
 ```
 
