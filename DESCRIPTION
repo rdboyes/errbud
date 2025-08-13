@@ -1,0 +1,14 @@
+Package: errbud
+Title: Your error buddy
+Version: 0.1.0
+Authors@R: 
+    person("Randy", "Boyes", , "randy.boyes@gmail.com", role = c("aut", "cre"))
+Description: Provides convenience functions to help you gather error messages and environment context and send that information to LLMs. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    ellmer,
+    glue,
+    rlang
