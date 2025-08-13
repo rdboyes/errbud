@@ -38,7 +38,7 @@ Call `ai()` to help explain what’s going on:
 errbud::ai()
 ```
 
-### Output
+### Output (this example from local gpt-oss:20B)
 
 The error “object of type ‘builtin’ is not subsettable” usually means
 you called the subsetting operator `[ ]` without attaching it to a real
