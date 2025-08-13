@@ -28,7 +28,7 @@ This is a basic example which shows you how to solve a common problem:
 sum[1]
 ```
 
-![](man/figures/error.png)
+![](/man/figures/error.png)
 
 Call `ai()` to help explain what’s going on:
 
