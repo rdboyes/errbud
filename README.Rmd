@@ -37,8 +37,7 @@ This is a basic example which shows you how to solve a common problem:
 sum[1]
 ```
 
->[!ERROR]
-> ! Object of type 'builtin' is not subsettable
+![](man/figures/error.png)
 
 Call `ai()` to help explain what's going on: 
 
