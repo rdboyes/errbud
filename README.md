@@ -28,9 +28,7 @@ This is a basic example which shows you how to solve a common problem:
 sum[1]
 ```
 
-``` r
-! Object of type 'builtin' is not subsettable
-```
+> \[!ERROR\] ! Object of type ‘builtin’ is not subsettable
 
 Call `ai()` to help explain what’s going on:
 
