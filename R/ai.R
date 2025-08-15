@@ -21,7 +21,7 @@ ai <- function(){
   }
 
   chat <- ellmer::chat_ollama(model = model)
-  chat$chat(get_context_for_llm())
+  chat$chat(get_context_for_llm(followup = FALSE))
 }
 
 #' Copy Error with Information to Clipboard
@@ -32,18 +32,24 @@ ai <- function(){
 #' @return NULL
 #' @export
 aicopy <- function(){
-  clipr::write_clip(get_context_for_llm())
+  clipr::write_clip(get_context_for_llm(followup = TRUE))
   return(NULL)
 }
 
-get_context_for_llm <- function(){
+get_context_for_llm <- function(followup){
   x <- rlang::last_error()
 
   code <- capture.output(x$call)
   message <- capture.output(x)
 
-  session <- capture.output(sessionInfo())
+  session <- paste0(capture.output(sessionInfo()), collapse = "\n")
   objs <- tryCatch(paste0(ls(), collapse = ", "), error = \(x){" [none]"})
+  
+  if (followup){
+    ending <- "I can provide more detail if you need it."
+  } else {
+    ending <- "No followup will be provided. Do not ask for clarification, do your best with the information available."
+  }
 
   return(glue::glue("
   I ran {code} and got the error {message}. 
@@ -55,9 +61,5 @@ get_context_for_llm <- function(){
   I have this list of objects defined: {objs}.
 
   Can you help me fix this? I'm using the R programming language and I need a quick solution, 
-  just one or two paragraphs."))
-}
-
-size_in_bytes <- function(str){
-
+  just one or two paragraphs. {ending}"))
 }
