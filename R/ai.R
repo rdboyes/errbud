@@ -40,7 +40,7 @@ aicopy <- function(){
 get_context_for_llm <- function(followup){
   x <- rlang::last_error()
 
-  code <- paste0(utils::capture.output(x$call), collpase = "\n")
+  code <- paste0(utils::capture.output(x$call), collapse = "\n")
   message <- paste0(utils::capture.output(x), collapse = "\n")
 
   session <- utils::sessionInfo()
