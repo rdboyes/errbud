@@ -63,7 +63,7 @@ ollamar::test_connection()
 
 ## Download and run a model
 
-If you don't know where to start, `qwen2.5-coder:0.5b` is only 400MB and will run on almost any modern hardware. Bigger models will run slower and give better advice, as a general rule. Once you get a sense for how reliable and fast `qwen2.5-coder:0.5b` is, you can try bigger versions of `qwen2.5-coder`, which are listed [here](https://ollama.com/library/qwen2.5-coder). To download and run `qwen2.5-coder:0.5b`, use: 
+If you don't know where to start, `qwen2.5-coder:3b` is only 2 GB and will run on almost any modern hardware. `qwen2.5-coder:7b` is around 5 GB. Bigger models will run slower and give better advice, as a general rule. If you just want to see how the package works, you can download `qwen2.5-coder:0.5b`, which is 400 MB. Once you get a sense for how reliable and fast `qwen2.5-coder:0.5b` is, you can try bigger versions of `qwen2.5-coder`, which are listed [here](https://ollama.com/library/qwen2.5-coder). `gpt-oss:20b` is better than all of these in my experience if you have the hardware to run it. To download and run `qwen2.5-coder:0.5b`, use: 
 
 ```r
 ollamar::pull('qwen2.5-coder:0.5b')
@@ -85,9 +85,18 @@ Call `ai()` to help explain what's going on:
 errbud::ai()
 ```
 
-### Output (this example from local gpt-oss:20B)
+### Output (this example from local qwen2.5-coder:7b)
 
-The error “object of type ‘builtin’ is not subsettable” usually means you called the subsetting operator `[ ]` without attaching it to a real object (e.g., `x[1]` vs. just `[` or mis‑spelled a function name). R’s `[` is an S3 generic that works on vector, matrix, data frame, list, etc., and it expects an object on its left‑hand side. In your session you only have the default packages loaded and three objects (`chat`, `pkgs`, `x`). The fix is simply to provide a concrete object inside the brackets. For example, if you want the first element of `x`, type `x[1]`; if you want the element of `pkgs` whose name is stored in `chat`, type `pkgs[chat]` (or `pkgs[[chat]]` if you need a single element from a list). If you intended to use a different function (say `subset` from base R or `filter` from `dplyr`), call that function directly: `subset(x, condition)` or `dplyr::filter(df, condition)`. Once `[` is attached to an actual object, the “builtin not subsettable” error disappears.
+It looks like you're encountering an error because you're trying to subset a built-in function (`sum`) using `[`. Built-in functions in R are not designed to be subsetted in this way.
+
+If you want to access elements from a list or vector, make sure you use the correct syntax for subsetting. For example:
+
+```R
+# Assuming sum is a list, you can access its elements like this:
+result <- sum[[1]]
+```
+
+However, if `sum` is indeed a built-in function and not a list or vector, then there might be a misunderstanding. Could it be that `sum` was mistakenly used as a variable name at some point in your code? In that case, make sure you don't override built-in functions with user-defined variables.
 
 ## Comparison of qwen2.5-coder models
 
@@ -127,6 +136,70 @@ This will ensure that all the required packages are loaded properly and that `y`
   
 Remember, updating package environments and ensuring all objects are present can speed up your R programming life, especially if you have large datasets or complex analyses.
 
+### `qwen2.5-coder:1.5b`: Sort of understands error, code is useless
+
+The error message is occurring because R was unable to find the variable `y` in the environment where the mutate operation was performed. This could be due to either: 
+
+- The `y` variable not being passed as an argument to the mutate function or a typo in the column name within the mutate function.
+  
+- The mutation code might be trying to manipulate `x` before accessing `y`, resulting in an attempt to access `y` when the value of `y` hasn't been assigned yet.
+
+To fix this issue, you can manually assign the value of `y` before performing the mutate operation. Replace the error-prone line with:
+
+```r
+y = 26 + x^2
+mutate(tibble(x = c(1, 2, 3, 4, 5, -6)), y = y, z = y - 15)
+a = 15 * y
+```
+
+This way, R can find the value of `y` before processing it in the mutate operation.
+
+### `qwen2.5-coder:3b`: Doesn't understand error, still manages to fix it
+
+The error you're encountering is likely due to an issue within the `tidyverse` family of packages as they integrate various functionalities into a unified workflow. The code snippet you provided involves several data manipulation operations using `dplyr`, which can sometimes lead to unexpected behavior if not properly managed within your environment.
+
+To resolve this issue, ensure that all required packages are loaded and that your dataset is correctly defined at the time of operation. Here's how you can modify your code:
+
+```r
+# Ensure all necessary packages are loaded
+library(tidyverse)
+
+# Define a tidy data frame with column x
+x_df <- tibble(x = c(1, 2, 3, 4, 5, -6))
+
+# Mutate the data frame to include y and z columns
+x_df <- x_df %>%
+  mutate(y = 26 + x^2) %>%
+  mutate(z = y - 15)
+
+# Compute column 'a' as 15 times y
+x_df$a <- 15 * x_df$y
+
+# Print the resulting data frame to verify changes
+print(x_df)
+```
+
+This approach should resolve the error you're encountering and allow you to manipulate your dataset effectively within your R environment.
+
+### `qwen2.5-coder:7b`: Better fix, still doesn't understand error
+
+The error you're encountering is due to the `y` column being created after you attempt to use it in the `mutate(a = 15 * y)` step. To fix this, ensure that all columns used in subsequent operations are defined before they are referenced.
+
+Here's how you can adjust your code:
+
+```r
+data <- mutate(
+  tibble(x = c(1, 2, 3, 4, 5, -6)), 
+  y = 26 + x^2,
+  z = y - 15
+)
+result <- mutate(data, a = 15 * y)
+```
+
+By separating the creation of `data` and `result`, you ensure that `y` is available when you attempt to use it in the second `mutate(a = 15 * y)` call.
+
+If this doesn't resolve your issue or if you need further assistance, feel free to ask.
+
 ### `qwen2.5-coder:14b`: Generates correct code (with some iffy reasoning)
 
 The error message indicates that the object `y` is not found in the environment when `mutate()` tries to compute the 
@@ -151,3 +224,53 @@ tibble(x = c(1, 2, 3, 4, 5, -6)) %>%
 This should resolve the error as it ensures that `y` is properly defined before you try to use it in subsequent 
 computations. Make sure to run this snippet step-by-step in your R environment to verify that everything works as 
 expected.
+
+### `qwen2.5-coder:32b`: So close to getting it
+
+The error you're encountering is due to the fact that `y` is being used in a `mutate()` context where it hasn't been defined yet in the current pipeline. In `dplyr`, when mutating columns, each new column is not immediately available for use in subsequent operations within the same `mutate()` call unless you chain them properly.
+
+To fix this, you can break the `mutate()` calls into separate steps so that `y` is defined before it's used to calculate `a`. Here's how you can do it:
+
+```r
+library(dplyr)
+tibble(x = c(1, 2, 3, 4, 5, -6)) %>%
+    mutate(y = 26 + x^2) %>%
+    mutate(-y) %>% 
+    mutate(a = 15 * y)
+```
+
+This code first calculates `y`, then negates it (though the `-y` step doesn't seem to be affecting `a`, so you might want to remove or adjust it if not needed), and finally calculates `a` using the defined `y`. If the negation of `y` is intended for use in another part of your analysis, ensure that it fits logically within your data transformations.
+
+### `gpt-oss`: Success
+
+`mutate()` evaluates its expressions in the order they are written and inside a single call all the new columns are available to the subsequent ones. In your code you nest two calls:
+
+```r
+mutate(                                       # outer mutate
+  select(                                     # inner SELECT
+    mutate(tibble(x = c(1, 2, 3, 4, 5, -6)),  # create y and z
+           y = 26 + x^2,
+           z = y - 15),
+    -y                                        # drop y
+  ),
+  a = 15 * y                                  # outer mutate tries to use y
+)
+```
+
+The `select( … , -y)` removes the column **y** before the outer `mutate()` tries to reference it, so R cannot find `y` and throws the error.  
+
+**Fix:** create `a` before you drop `y`, or keep `y` in the data frame until after you are done using it. A concise way is:
+
+```r
+library(dplyr)
+
+tibble(x = c(1, 2, 3, 4, 5, -6)) %>%
+  mutate(
+    y = 26 + x^2,
+    z = y - 15,
+    a = 15 * y
+  ) %>%
+  select(-y)          # drop y only after a is computed
+```
+
+This keeps `y` available for the calculation of `a`, then removes it once it is no longer needed.
