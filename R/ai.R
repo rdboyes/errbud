@@ -54,12 +54,12 @@ get_context_for_llm <- function(followup){
   return(glue::glue("
   I ran {code} and got the error {message}. 
   
-  My sessionInfo is: 
-
-  {session}
-  
   I have this list of objects defined: {objs}.
 
   Can you help me fix this? I'm using the R programming language and I need a quick solution, 
-  just one or two paragraphs. {ending}"))
+  just one or two paragraphs. {ending}
+  
+  My sessionInfo is: 
+
+  {session}"))
 }
