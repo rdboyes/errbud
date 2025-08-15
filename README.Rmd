@@ -89,7 +89,7 @@ errbud::ai()
 
 The error “object of type ‘builtin’ is not subsettable” usually means you called the subsetting operator `[ ]` without attaching it to a real object (e.g., `x[1]` vs. just `[` or mis‑spelled a function name). R’s `[` is an S3 generic that works on vector, matrix, data frame, list, etc., and it expects an object on its left‑hand side. In your session you only have the default packages loaded and three objects (`chat`, `pkgs`, `x`). The fix is simply to provide a concrete object inside the brackets. For example, if you want the first element of `x`, type `x[1]`; if you want the element of `pkgs` whose name is stored in `chat`, type `pkgs[chat]` (or `pkgs[[chat]]` if you need a single element from a list). If you intended to use a different function (say `subset` from base R or `filter` from `dplyr`), call that function directly: `subset(x, condition)` or `dplyr::filter(df, condition)`. Once `[` is attached to an actual object, the “builtin not subsettable” error disappears.
 
-### Comparison of qwen2.5-coder models
+## Comparison of qwen2.5-coder models
 
 Here's a simple dplyr chain that causes an error: 
 
@@ -100,7 +100,7 @@ tibble(x = c(1, 2, 3, 4, 5, -6)) |>
   mutate(a = 15 * y)
 ```
 
-#### `qwen2.5-coder:0.5b`: Identifies the issue (sort of) but fix is nonsensical
+### `qwen2.5-coder:0.5b`: Identifies the issue (sort of) but fix is nonsensical
 
 The issue you're encountering is due to how `dplyr` manages objects in its package hierarchy. When you run the code, some objects are missing from the current working directory (cwd) or are being reloaded based on their dependencies.
 
@@ -127,7 +127,7 @@ This will ensure that all the required packages are loaded properly and that `y`
   
 Remember, updating package environments and ensuring all objects are present can speed up your R programming life, especially if you have large datasets or complex analyses.
 
-#### `qwen2.5-coder:14b`: Generates correct code (with some iffy reasoning)
+### `qwen2.5-coder:14b`: Generates correct code (with some iffy reasoning)
 
 The error message indicates that the object `y` is not found in the environment when `mutate()` tries to compute the 
 expression `15 * y`. This suggests that the definition of `y` is incomplete or might have been omitted in your code 

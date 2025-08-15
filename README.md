@@ -103,7 +103,7 @@ directly: `subset(x, condition)` or `dplyr::filter(df, condition)`. Once
 `[` is attached to an actual object, the “builtin not subsettable” error
 disappears.
 
-### Comparison of qwen2.5-coder models
+## Comparison of qwen2.5-coder models
 
 Here’s a simple dplyr chain that causes an error:
 
@@ -114,7 +114,7 @@ tibble(x = c(1, 2, 3, 4, 5, -6)) |>
   mutate(a = 15 * y)
 ```
 
-#### `qwen2.5-coder:0.5b`: Identifies the issue (sort of) but fix is nonsensical
+### `qwen2.5-coder:0.5b`: Identifies the issue (sort of) but fix is nonsensical
 
 The issue you’re encountering is due to how `dplyr` manages objects in
 its package hierarchy. When you run the code, some objects are missing
@@ -155,7 +155,7 @@ Remember, updating package environments and ensuring all objects are
 present can speed up your R programming life, especially if you have
 large datasets or complex analyses.
 
-#### `qwen2.5-coder:14b`: Generates correct code (with some iffy reasoning)
+### `qwen2.5-coder:14b`: Generates correct code (with some iffy reasoning)
 
 The error message indicates that the object `y` is not found in the
 environment when `mutate()` tries to compute the expression `15 * y`.
