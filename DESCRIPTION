@@ -11,9 +11,8 @@ RoxygenNote: 7.3.2
 Imports: 
     clipr,
     ellmer,
-    gargle,
     glue,
     lubridate,
+    memuse,
     ollamar,
-    rlang,
-    stringr
+    rlang

@@ -11,6 +11,7 @@ string
 }
 \description{
 Call \code{ai()} to help you fix an error. This will stream LLM response to your console intended to help
-understand and fix the error. Will default to your most recently installed model if the option \code{"errbud_model"}
+understand and fix the error. Will default to your most recently installed model that is less than 16 GB in size
+(or, if you have less than 16 GB of RAM, less than your available RAM) if the option \code{"errbud_model"}
 is not set.
 }

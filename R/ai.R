@@ -13,7 +13,7 @@ ai <- function(){
   if (is.null(model)){
     mem_target <- min(16237037568, memuse::Sys.meminfo()$totalram |> as.numeric())
     models_available = ollamar::list_models() 
-    fits = sapply(strsplit(x$size, " "), 
+    fits = sapply(strsplit(models_available$size, " "), 
       FUN = \(x){as.numeric(x[1]) * 10e8 < mem_target || x[2] == "MB"})
     models_available = models_available[fits, ]
     newest <- which.max(lubridate::as_datetime(models_available$modified))
@@ -40,10 +40,10 @@ aicopy <- function(){
 get_context_for_llm <- function(followup){
   x <- rlang::last_error()
 
-  code <- paste0(capture.output(x$call), collpase = "\n")
-  message <- paste0(capture.output(x), collapse = "\n")
+  code <- paste0(utils::capture.output(x$call), collpase = "\n")
+  message <- paste0(utils::capture.output(x), collapse = "\n")
 
-  session <- sessionInfo()
+  session <- utils::sessionInfo()
   version <- session$R.version$version.string
   basepkgs <- paste0(session$basePkgs, collapse = ", ")
   loaded <- paste0(names(session$otherPkgs), collapse = ", ")
