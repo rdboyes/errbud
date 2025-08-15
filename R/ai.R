@@ -1,7 +1,8 @@
 #' Get AI Help after an Error
 #'
 #' Call `ai()` to help you fix an error. This will stream LLM response to your console intended to help
-#' understand and fix the error. Will default to your most recently installed model if the option `"errbud_model"` 
+#' understand and fix the error. Will default to your most recently installed model that is less than 16 GB in size 
+#' (or, if you have less than 16 GB of RAM, less than your available RAM) if the option `"errbud_model"` 
 #' is not set.
 #'
 #' @return string
@@ -10,7 +11,11 @@ ai <- function(){
   model <- getOption("errbud_model", default = NULL)
 
   if (is.null(model)){
+    mem_target <- min(16237037568, memuse::Sys.meminfo()$totalram |> as.numeric())
     models_available = ollamar::list_models() 
+    fits = lapply(stringr::strsplit(x$size, " "), 
+      FUN = \(x){as.numeric(x[1]) * 10e8 < mem_target || x[2] == "MB"})
+    models_available = models_available[fits]
     newest <- which.max(lubridate::as_datetime(models_available$modified))
     model <- models_available[newest]
   }
@@ -37,12 +42,22 @@ get_context_for_llm <- function(){
   code <- capture.output(x$call)
   message <- capture.output(x)
 
-  pkgs <- tryCatch(paste0(.packages(), collapse = ", "), error =\(x){"no packages"})
+  session <- capture.output(sessionInfo())
   objs <- tryCatch(paste0(ls(), collapse = ", "), error = \(x){" [none]"})
 
-  return(glue::glue("I ran {code} and got the error {message}. 
-  I have {pkgs} loaded currently. 
+  return(glue::glue("
+  I ran {code} and got the error {message}. 
+  
+  My sessionInfo is: 
+
+  {session}
+  
   I have this list of objects defined: {objs}.
+
   Can you help me fix this? I'm using the R programming language and I need a quick solution, 
   just one or two paragraphs."))
+}
+
+size_in_bytes <- function(str){
+
 }

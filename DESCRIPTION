@@ -15,4 +15,5 @@ Imports:
     glue,
     lubridate,
     ollamar,
-    rlang
+    rlang,
+    stringr
