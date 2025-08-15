@@ -43,24 +43,32 @@ get_context_for_llm <- function(followup){
   code <- paste0(capture.output(x$call), collpase = "\n")
   message <- paste0(capture.output(x), collapse = "\n")
 
-  session <- paste0(capture.output(sessionInfo()), collapse = "\n")
+  session <- sessionInfo()
+  version <- session$R.version$version.string
+  basepkgs <- paste0(session$basePkgs, collapse = ", ")
+  loaded <- paste0(names(session$otherPkgs), collapse = ", ")
+  platform <- session$platform
+
+
   objs <- tryCatch(paste0(ls(), collapse = ", "), error = \(x){" [none]"})
   
   if (followup){
-    ending <- "I can provide more detail if you need it."
+    ending <- "I can provide more detail if you need it. You can suggest R commands to run that would get the information you need."
   } else {
     ending <- "No followup will be provided. Do not ask for clarification, do your best with the information available."
   }
 
   return(glue::glue("
-  I ran {code} and got the error {message}. 
+  I ran the code '{code}' and got the error:
+  
+  {message} 
   
   I have this list of objects defined: {objs}.
 
-  Can you help me fix this? I'm using the R programming language and I need a quick solution, 
-  just one or two paragraphs. {ending}
-  
-  My sessionInfo is: 
+  I have the following base packages loaded: {basepkgs}
 
-  {session}"))
+  I have the following other packages loaded: {loaded}
+
+  Can you help me fix this? I'm using the R programming language version {version} on {platform} and I need a quick solution, 
+  just one or two paragraphs. {ending}"))
 }
