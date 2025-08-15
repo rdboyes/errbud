@@ -1,19 +1,28 @@
 #' Get AI Help after an Error
 #'
 #' Call `ai()` to help you fix an error. This will stream LLM response to your console intended to help
-#' understand and fix the error.  
+#' understand and fix the error. Will default to your most recently installed model if the option `"errbud_model"` 
+#' is not set.
 #'
 #' @return string
 #' @export
 ai <- function(){
-  chat <- ellmer::chat_ollama(model = "gpt-oss:20B")
+  model <- getOption("errbud_model", default = NULL)
+
+  if (is.null(model)){
+    models_available = ollamar::list_models() 
+    newest <- which.max(lubridate::as_datetime(models_available$modified))
+    model <- models_available[newest]
+  }
+
+  chat <- ellmer::chat_ollama(model = model)
   chat$chat(get_context_for_llm())
 }
 
 #' Copy Error with Information to Clipboard
 #'
 #' Call `aicopy()` to copy your error message and other information useful to LLMs to clipboard.
-#' This could be pasted into ChatGPT or Claude in order to help you fix the error. 
+#' This could be pasted into ChatGPT or Claude (for example) in order to help you fix the error. 
 #'
 #' @return NULL
 #' @export

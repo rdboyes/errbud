@@ -11,5 +11,6 @@ string
 }
 \description{
 Call \code{ai()} to help you fix an error. This will stream LLM response to your console intended to help
-understand and fix the error.
+understand and fix the error. Will default to your most recently installed model if the option \code{"errbud_model"}
+is not set.
 }

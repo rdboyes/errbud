@@ -20,6 +20,55 @@ You can install the development version of errbud from
 pak::pak("rdboyes/errbud")
 ```
 
+## Installing Ollama
+
+Ollama is required for this package to work. Install Ollama from their
+site:
+
+- [MacOS](https://ollama.com/download/mac)
+- [Windows](https://ollama.com/download/windows)
+- [Linux](https://ollama.com/download/linux)
+
+``` sh
+# linux install script
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+Once Ollama is installed, (optionally) install `ollamar` to interact
+with it from R.
+
+``` r
+pak::pak('ollamar')
+```
+
+If everything has worked correctly, you should be able to contact your
+ollama server from inside R now:
+
+``` r
+ollamar::test_connection()
+
+# Ollama local server running
+# <httr2_response>
+# GET http://localhost:11434/
+# Status: 200 OK
+# Content-Type: text/plain
+# Body: In memory (17 bytes)
+```
+
+## Download and run a model
+
+If you don’t know where to start, `qwen2.5-coder:0.5b` is only 400MB and
+will run on almost any modern hardware. Bigger models will run slower
+and give better advice, as a general rule. Once you get a sense for how
+reliable and fast `qwen2.5-coder:0.5b` is, you can try bigger versions
+of `qwen2.5-coder`, which are listed
+[here](https://ollama.com/library/qwen2.5-coder). To download and run
+`qwen2.5-coder:0.5b`, use:
+
+``` r
+ollamar::pull('qwen2.5-coder:0.5b')
+```
+
 ## Example
 
 This is a basic example which shows you how to solve a common problem:
