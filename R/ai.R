@@ -21,7 +21,8 @@ ai <- function(){
   }
 
   chat <- ellmer::chat_ollama(model = model)
-  chat$chat(get_context_for_llm(followup = FALSE))
+  chat$chat(get_context_for_llm(followup = FALSE), echo = TRUE)
+  return(invisible(NULL))
 }
 
 #' Copy Error with Information to Clipboard
