@@ -40,8 +40,8 @@ aicopy <- function(){
 get_context_for_llm <- function(followup){
   x <- rlang::last_error()
 
-  code <- capture.output(x$call)
-  message <- capture.output(x)
+  code <- paste0(capture.output(x$call), collpase = "\n")
+  message <- paste0(capture.output(x), collapse = "\n")
 
   session <- paste0(capture.output(sessionInfo()), collapse = "\n")
   objs <- tryCatch(paste0(ls(), collapse = ", "), error = \(x){" [none]"})
