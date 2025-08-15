@@ -13,11 +13,11 @@ ai <- function(){
   if (is.null(model)){
     mem_target <- min(16237037568, memuse::Sys.meminfo()$totalram |> as.numeric())
     models_available = ollamar::list_models() 
-    fits = lapply(stringr::strsplit(x$size, " "), 
+    fits = sapply(strsplit(x$size, " "), 
       FUN = \(x){as.numeric(x[1]) * 10e8 < mem_target || x[2] == "MB"})
-    models_available = models_available[fits]
+    models_available = models_available[fits, ]
     newest <- which.max(lubridate::as_datetime(models_available$modified))
-    model <- models_available[newest]
+    model <- models_available$name[newest]
   }
 
   chat <- ellmer::chat_ollama(model = model)
