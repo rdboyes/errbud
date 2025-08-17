@@ -16,3 +16,7 @@ Imports:
     memuse,
     ollamar,
     rlang
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
